@@ -3,11 +3,14 @@ import { useEffect, useState } from 'react';
 import { v4 as uuid } from 'uuid';
 import Code from './Code';
 import Form from './Form';
+import Modal from './Modal';
 import Navbar from './Navbar';
 
 function App() {
   const [peer, setPeer] = useState();
   const [receiverId, setReceiverId] = useState();
+  const [data, setData] = useState();
+  const [isModalOpen, setIsModalOpen] = useState(false);
 
   useEffect(() => {
     setPeer(new Peer(`webdrop-${uuid()}`));
@@ -27,12 +30,10 @@ function App() {
       console.log(conn);
       conn.on('open', () => {
         conn.on('data', d => {
-          const {type, name, buffer} = d;
-          const url = URL.createObjectURL(new Blob([buffer]));
-          console.log(url);
-          console.log(d);
-        });
-      });
+          setData(d);
+          setIsModalOpen(true);
+        }
+      )});
     });
 
   }, [peer]);
@@ -45,6 +46,7 @@ function App() {
 
   return (
     <div className='App'>
+      {isModalOpen && <Modal data={data}/>}
       <Navbar />
       {!receiverId && <div style={{display: 'flex', flex: 1, flexDirection: 'column'}}>
         <Code peer={peer}/>
