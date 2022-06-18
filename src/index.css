@@ -78,3 +78,12 @@ body {
   padding: 8px 22px;
   cursor: pointer;
 }
+
+.Code {
+  flex: 1;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  flex-direction: column;
+  padding: 22px;
+}
