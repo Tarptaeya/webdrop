@@ -26,7 +26,12 @@ function App() {
     peer.on('connection', conn => {
       console.log(conn);
       conn.on('open', () => {
-        conn.on('data', d => console.log(d));
+        conn.on('data', d => {
+          const {type, name, buffer} = d;
+          const url = URL.createObjectURL(new Blob([buffer]));
+          console.log(url);
+          console.log(d);
+        });
       });
     });
 
