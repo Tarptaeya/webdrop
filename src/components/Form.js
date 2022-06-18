@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
 
-function Form({peer, receiverId}) {
+function Form({peer, receiver}) {
   const [files, setFiles] = useState([]);
 
   const handleSubmit = e => {
@@ -10,7 +10,7 @@ function Form({peer, receiverId}) {
     const reader = new FileReader();
     reader.addEventListener('load', e => {
       const buffer = e.target.result;
-      const conn = peer.connect(receiverId);
+      const conn = peer.connect(receiver.id);
       conn.on('open', () => {
         conn.send({ 
           type: files[0].type,
@@ -23,11 +23,11 @@ function Form({peer, receiverId}) {
   }
 
   return <form className='Form' onSubmit={handleSubmit}>
+      <div>
+        <h2>Pick a file to share it with <span>{receiver.name ?? receiver.id}</span>.</h2>
+      </div>
       <input type={'file'} onChange={e => setFiles(e.target.files)}></input>
       <input type={'submit'} value={'Share'} disabled={files.length === 0}></input>
-      <div>
-        <p>Sending file to: {receiverId}</p>
-      </div>
     </form>;
 }
 

@@ -3,12 +3,22 @@ import { useEffect, useState } from 'react';
 import { v4 as uuid } from 'uuid';
 import Code from './Code';
 import Form from './Form';
+import Login from './Login';
 import Modal from './Modal';
 import Navbar from './Navbar';
 
+const styles = {
+  container: {
+    display: 'flex',
+    flex: 1,
+    flexDirection: 'column',
+  }
+}
+
 function App() {
+  const [name, setName] = useState(localStorage.getItem('name'));
   const [peer, setPeer] = useState();
-  const [receiverId, setReceiverId] = useState();
+  const [receiver, setReceiver] = useState({});
   const [data, setData] = useState();
   const [isModalOpen, setIsModalOpen] = useState(false);
 
@@ -17,8 +27,9 @@ function App() {
 
     const params = new URLSearchParams(window.location.search);
     const id = params.get('peer-id');
+    const name = params.get('name');
     if (!!id) {
-      setReceiverId(id);
+      setReceiver({id, name});
     }
   }, []);
 
@@ -38,22 +49,33 @@ function App() {
 
   }, [peer]);
 
+  useEffect(() => {
+    if (!name) {
+      localStorage.removeItem('name');
+    } else {
+      localStorage.setItem('name', name);
+    }
+  }, [name]);
+
   if (!peer) {
     return <div>
       <p>Unable to connect to WebRTC</p>
     </div>
   }
 
+  if (!name) {
+    return <div style={styles.container}>
+      <Navbar />
+      <Login onSubmit={setName}/>
+    </div>;
+  }
+
   return (
-    <div className='App'>
+    <div style={styles.container}>
       {isModalOpen && <Modal data={data}/>}
       <Navbar />
-      {!receiverId && <div style={{display: 'flex', flex: 1, flexDirection: 'column'}}>
-        <Code peer={peer}/>
-      </div>}
-      {receiverId && <div>
-        <Form peer={peer} receiverId={receiverId} />
-      </div>}
+      {!receiver.id && <Code peer={peer} name={name} />}
+      {receiver.id && <Form peer={peer} name={peer} receiver={receiver} />}
     </div>
   );
 }
