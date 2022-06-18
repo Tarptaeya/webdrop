@@ -43,6 +43,7 @@ function App() {
         conn.on('data', d => {
           setData(d);
           setIsModalOpen(true);
+          conn.close();
         })
       });
     });
