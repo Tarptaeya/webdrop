@@ -1,23 +1,27 @@
-import logo from './logo.svg';
-import './App.css';
+import { Peer } from 'peerjs';
+import { QRCodeCanvas } from 'qrcode.react';
+import { useEffect, useState } from 'react';
+import { v4 as uuid } from 'uuid';
+import Form from './Form';
+import Navbar from './Navbar';
 
 function App() {
+  const [peer, setPeer] = useState();
+
+  useEffect(() => {
+    const id = uuid();
+    setPeer(new Peer(`webdrop-${id}`));
+  }, []);
+
+  useEffect(() => {
+    console.log(peer);
+  }, [peer]);
+
   return (
-    <div className="App">
-      <header className="App-header">
-        <img src={logo} className="App-logo" alt="logo" />
-        <p>
-          Edit <code>src/App.js</code> and save to reload.
-        </p>
-        <a
-          className="App-link"
-          href="https://reactjs.org"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          Learn React
-        </a>
-      </header>
+    <div className='App'>
+      <Navbar />
+      <QRCodeCanvas value={`https://anmolgautam.com/webdrop?peer-id=${peer?.id ?? ''}`}/>
+      {peer && <Form peer={peer} />}
     </div>
   );
 }
