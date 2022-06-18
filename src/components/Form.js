@@ -14,7 +14,8 @@ function Form({peer, receiver}) {
       conn.on('open', () => {
         conn.send({ 
           type: files[0].type,
-          name: files[0].name,
+          name: localStorage.getItem('name') ?? 'a webdrop user',
+          filename: files[0].name,
           buffer,
         });
       });

@@ -12,7 +12,7 @@ const styles = {
     display: 'flex',
     flex: 1,
     flexDirection: 'column',
-  }
+  },
 }
 
 function App() {
@@ -43,8 +43,8 @@ function App() {
         conn.on('data', d => {
           setData(d);
           setIsModalOpen(true);
-        }
-      )});
+        })
+      });
     });
 
   }, [peer]);
@@ -72,7 +72,7 @@ function App() {
 
   return (
     <div style={styles.container}>
-      {isModalOpen && <Modal data={data}/>}
+      {isModalOpen && <Modal data={data} onAccept={() => setIsModalOpen(false)} onReject={() => setIsModalOpen(false)}/>}
       <Navbar />
       {!receiver.id && <Code peer={peer} name={name} />}
       {receiver.id && <Form peer={peer} name={peer} receiver={receiver} />}
